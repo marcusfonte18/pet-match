@@ -5,7 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { prisma } from 'src/database/prisma';
+
+import { prisma } from '@/database/prisma';
 
 @Injectable()
 export class UsersService {
@@ -37,7 +38,12 @@ export class UsersService {
   async findAll() {
     try {
       return {
-        users: await prisma.user.findMany(),
+        users: await prisma.user.findMany({
+          include: {
+            pet: true,
+            match: true,
+          },
+        }),
       };
     } catch (error) {
       throw new BadRequestException({
@@ -50,6 +56,10 @@ export class UsersService {
   async findOne(id: string) {
     const user = await prisma.user.findUnique({
       where: { id },
+      include: {
+        pet: true,
+        match: true,
+      },
     });
 
     if (!user) {
