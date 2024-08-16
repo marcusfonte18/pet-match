@@ -7,12 +7,19 @@ import { AppService } from './app.service';
 
 import { UsersModule } from './users/users.module';
 import { PetsService } from './pets/pets.service';
-import { PetsController } from './pets/pets.controller';
 import { PetsModule } from './pets/pets.module';
+import { MatchesModule } from './matches/matches.module';
+import { InteractionsModule } from './interactions/interactions.module';
 
 @Module({
-  imports: [UsersModule, HttpModule, PetsModule],
-  controllers: [AppController, PetsController],
+  imports: [
+    UsersModule,
+    HttpModule,
+    PetsModule,
+    MatchesModule,
+    InteractionsModule,
+  ],
+  controllers: [AppController],
   providers: [AppService, PetsService],
 })
 export class AppModule {}

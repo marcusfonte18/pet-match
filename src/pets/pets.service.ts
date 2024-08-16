@@ -17,12 +17,23 @@ export class PetsService {
   };
 
   async create(createPetDto) {
+    const user = await prisma.user.findUnique({
+      where: { id: createPetDto.ownerId },
+    });
+
+    if (!user) {
+      throw new NotFoundException({
+        message: 'User not found',
+        type: 'NotFound',
+      });
+    }
+
     const petExist = await prisma.pet.findFirst({
       where: {
         AND: {
           name: createPetDto.name,
           breed: createPetDto.breed,
-          age: createPetDto.age,
+          age: Number(createPetDto.age),
         },
       },
     });

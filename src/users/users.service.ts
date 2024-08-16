@@ -20,11 +20,25 @@ export class UsersService {
   }
 
   async create(createUserDto: Prisma.UserCreateInput) {
+    const userExists = await prisma.user.findUnique({
+      where: { email: createUserDto.email },
+    });
+
+    if (userExists) {
+      throw new BadRequestException({
+        message: 'User already exists',
+        type: 'UserAlreadyExists',
+      });
+    }
+
     try {
       return await prisma.user.create({
         data: {
           ...createUserDto,
           birthdate: new Date(createUserDto.birthdate),
+          preference: {
+            create: createUserDto.preference,
+          },
         },
       });
     } catch (error) {
@@ -88,7 +102,15 @@ export class UsersService {
 
     return await prisma.user.update({
       where: { id },
-      data: updateUserDto,
+      data: {
+        ...updateUserDto,
+        preference: {
+          upsert: {
+            create: updateUserDto.preference,
+            update: updateUserDto.preference,
+          },
+        },
+      },
     });
   }
 

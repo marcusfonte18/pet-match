@@ -14,29 +14,45 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  birthdate DateTime
-  phone     String
-  address   String?
-  city      String?
-  number    String?
-  cep       String?
-  pet       Pet[]
-  match     Match[]
+  id           String        @id @default(uuid())
+  email        String        @unique
+  name         String
+  birthdate    DateTime
+  phone        String
+  address      String?
+  city         String?
+  number       String?
+  cep          String?
+  pet          Pet[]
+  match        Match[]
+  preference   Preference?
+  interactions Interaction[]
 
   @@map("user")
 }
 
+model Preference {
+  id     String  @id @default(uuid())
+  userId String  @unique
+  breed  String?
+  specie String?
+  ageMin Int?
+  ageMax Int?
+  user   User    @relation(fields: [userId], references: [id])
+
+  @@map("preference")
+}
+
 model Pet {
-  id      String  @id @default(uuid())
-  name    String
-  breed   String
-  age     Int?
-  owner   User?   @relation(fields: [ownerId], references: [id])
-  ownerId String?
-  match   Match[]
+  id          String        @id @default(uuid())
+  name        String
+  specie      String
+  breed       String
+  age         Int?
+  owner       User          @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  match       Match[]
+  Interaction Interaction[]
 
   @@map("pet")
 }
@@ -52,4 +68,16 @@ model Match {
   date    DateTime
 
   @@map("match")
+}
+
+model Interaction {
+  id     String   @id @default(uuid())
+  pet    Pet      @relation(fields: [petId], references: [id])
+  petId  String
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
+  action String // "LIKE" ou "DISLIKE"
+  date   DateTime @default(now())
+
+  @@map("interaction")
 }
