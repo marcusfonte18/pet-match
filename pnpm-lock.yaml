@@ -29,6 +29,9 @@ importers:
       axios:
         specifier: ^1.7.4
         version: 1.7.4
+      prisma:
+        specifier: ^5.18.0
+        version: 5.18.0
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.2
@@ -78,9 +81,6 @@ importers:
       prettier:
         specifier: ^3.0.0
         version: 3.3.3
-      prisma:
-        specifier: ^5.18.0
-        version: 5.18.0
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
